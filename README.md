@@ -44,6 +44,10 @@ spring.jpa.hibernate.ddl-auto=update
 
 Certifique-se de substituir `sua_senha` pela senha do seu usuário root do MySQL.
 
+
+## Documentação Swagger
+http://localhost:8080/swagger-ui/index.html#/Restaurantes/buscarRestaurantesPorCidade
+
 ---
 
 ## Como Construir e Iniciar o Projeto

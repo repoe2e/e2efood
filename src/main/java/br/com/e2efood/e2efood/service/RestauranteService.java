@@ -17,4 +17,9 @@ public class RestauranteService {
     public List<Restaurante> buscarPorCidade(String cidade) {
         return restauranteRepository.findByCidade(cidade);
     }
+
+    // Método para salvar um novo restaurante
+    public Restaurante salvarRestaurante(Restaurante restaurante) {
+        return restauranteRepository.save(restaurante);
+    }
 }

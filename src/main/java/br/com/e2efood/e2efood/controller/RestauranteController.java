@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,12 +30,14 @@ public class RestauranteController {
     @Autowired
     private RestauranteService restauranteService;
 
+    // Endpoint para buscar restaurantes por cidade (GET)
     @Operation(summary = "Buscar restaurantes por cidade", description = "Retorna uma lista de restaurantes que estão localizados em uma cidade específica.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Consulta realizada com sucesso", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Restaurante.class, example = "[{\"id\": 1, \"nome\": \"Restaurante Exemplo\", \"categoria\": \"Italiana\", \"taxaEntrega\": 5.0, \"tempoEstimado\": \"30-40 minutos\", \"endereco\": \"Rua Exemplo, 123\", \"cidade\": \"São Paulo\"}]"))),
+            @ApiResponse(responseCode = "200", description = "Consulta realizada com sucesso", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Restaurante.class))),
             @ApiResponse(responseCode = "204", description = "Nenhum restaurante encontrado para a cidade solicitada", content = @Content),
             @ApiResponse(responseCode = "400", description = "Parâmetros de entrada inválidos. A cidade deve ser informada ou é inválida."),
-            @ApiResponse(responseCode = "500", description = "Erro interno do servidor") })
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
+    })
     @GetMapping("/cidade")
     public ResponseEntity<?> buscarRestaurantesPorCidade(
             @Parameter(description = "Nome da cidade para buscar restaurantes", example = "São Paulo", required = true) @RequestParam(required = false) String cidade) {
@@ -63,8 +67,31 @@ public class RestauranteController {
         }
     }
 
+    // Endpoint para cadastrar um novo restaurante (POST)
+    @Operation(summary = "Cadastrar novo restaurante", description = "Adiciona um novo restaurante ao sistema.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Restaurante cadastrado com sucesso", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Restaurante.class))),
+            @ApiResponse(responseCode = "400", description = "Parâmetros inválidos", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content)
+    })
+    @PostMapping
+    public ResponseEntity<?> cadastrarRestaurante(@RequestBody Restaurante restaurante) {
+        try {
+            if (restaurante.getNome() == null || restaurante.getNome().trim().isEmpty()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(new ErrorResponse("O nome do restaurante é obrigatório."));
+            }
+
+            Restaurante novoRestaurante = restauranteService.salvarRestaurante(restaurante);
+            return ResponseEntity.status(HttpStatus.CREATED).body(novoRestaurante);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorResponse("Erro interno no servidor. Tente novamente mais tarde."));
+        }
+    }
+
+    // Classe para retornar erros no formato JSON
     public static class ErrorResponse {
-        @Schema(description = "Mensagem de erro detalhada", example = "Parâmetros de entrada inválidos: Cidade não pode estar vazia.")
         private String mensagem;
 
         public ErrorResponse(String mensagem) {

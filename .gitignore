@@ -46,3 +46,4 @@ coverage/
 *.tgz
 *.zip
 *.tar
+/target/

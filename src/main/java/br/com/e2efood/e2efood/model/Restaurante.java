@@ -1,10 +1,12 @@
 package br.com.e2efood.e2efood.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import io.swagger.v3.oas.annotations.media.Schema;
 
 @Entity
 @Schema(description = "Modelo que representa um restaurante")
@@ -47,6 +49,7 @@ public class Restaurante {
     public Restaurante() {}
 
     // Getters and Setters
+    
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 

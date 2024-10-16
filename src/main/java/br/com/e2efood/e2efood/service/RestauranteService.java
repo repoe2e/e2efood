@@ -11,15 +11,26 @@ import br.com.e2efood.e2efood.repository.RestauranteRepository;
 @Service
 public class RestauranteService {
 
-    @Autowired
-    private RestauranteRepository restauranteRepository;
+	@Autowired
+	private RestauranteRepository restauranteRepository;
 
-    public List<Restaurante> buscarPorCidade(String cidade) {
-        return restauranteRepository.findByCidade(cidade);
-    }
+	public List<Restaurante> buscarPorCidade(String cidade) {
+		return restauranteRepository.findByCidade(cidade);
+	}
 
-    // Método para salvar um novo restaurante
-    public Restaurante salvarRestaurante(Restaurante restaurante) {
-        return restauranteRepository.save(restaurante);
-    }
+	// Método para salvar um novo restaurante
+	public Restaurante salvarRestaurante(Restaurante restaurante) {
+		return restauranteRepository.save(restaurante);
+	}
+
+	// Método para buscar restaurante por ID
+	public Restaurante buscarRestaurantePorId(Long id) {
+		return restauranteRepository.findById(id).orElse(null);
+	}
+
+	// Método para atualizar um restaurante existente
+	public Restaurante atualizarRestaurante(Restaurante restaurante) {
+		return restauranteRepository.save(restaurante);
+	}
+
 }

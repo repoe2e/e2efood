@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -138,5 +139,32 @@ public class RestauranteController {
                     .body(new ErrorResponse("Erro interno no servidor. Tente novamente mais tarde."));
         }
     }
+    
+ // Endpoint para deletar um restaurante (DELETE)
+    @Operation(summary = "Deletar restaurante", description = "Deleta um restaurante existente no sistema.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Restaurante deletado com sucesso", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Restaurante não encontrado", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content)
+    })
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deletarRestaurante(
+            @Parameter(description = "ID do restaurante a ser deletado", required = true) @PathVariable Long id) {
+        try {
+            Restaurante restauranteExistente = restauranteService.buscarRestaurantePorId(id);
+
+            if (restauranteExistente == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(new ErrorResponse("Restaurante não encontrado."));
+            }
+
+            restauranteService.deletarRestaurante(id);
+            return ResponseEntity.ok().body(new ErrorResponse("Restaurante deletado com sucesso."));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorResponse("Erro interno no servidor. Tente novamente mais tarde."));
+        }
+    }
+
 
 }

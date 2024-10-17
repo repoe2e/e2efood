@@ -32,5 +32,11 @@ public class RestauranteService {
 	public Restaurante atualizarRestaurante(Restaurante restaurante) {
 		return restauranteRepository.save(restaurante);
 	}
+	
+	// Método para deletar um restaurante existente
+	public void deletarRestaurante(Long id) {
+	    restauranteRepository.deleteById(id);
+	}
+
 
 }

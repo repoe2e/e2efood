@@ -46,4 +46,7 @@ coverage/
 *.tgz
 *.zip
 *.tar
-/target/
+
+# Maven target folder (and any JAR files inside)
+target/
+target/*.jar
